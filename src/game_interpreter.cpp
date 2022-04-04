@@ -61,6 +61,8 @@
 #include "algo.h"
 #include "rand.h"
 
+#include "game_screen.h";
+
 enum BranchSubcommand {
 	eOptionBranchElse = 1
 };
@@ -2107,6 +2109,10 @@ bool Game_Interpreter::CommandComment(const lcf::rpg::EventCommand &com) {
 		}
 
 		return DynRpg::Invoke(command);
+	}
+	if (com.string == "WEED") {
+		Game_Screen* screen = Main_Data::game_screen.get();
+		screen->SetWeatherEffect(Game_Screen::WeatherType::Weather_Cool, 2);
 	}
 	return true;
 }

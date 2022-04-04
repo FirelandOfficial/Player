@@ -127,3 +127,13 @@ easyrpg_libretro.*
 eboot.bin
 *.vpk
 *.velf
+
+.vs/
+
+EasyRPG_Player.dir/
+
+EasyRPG_Player_exe.dir/
+
+x64/
+
+games/

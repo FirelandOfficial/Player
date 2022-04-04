@@ -59,6 +59,9 @@ void Weather::Draw(Bitmap& dst) {
 		case Game_Screen::Weather_Sandstorm:
 			DrawSandstorm(dst);
 			break;
+		case Game_Screen::Weather_Cool:
+			DrawCool(dst);
+			break;
 	}
 }
 
@@ -193,6 +196,10 @@ void Weather::DrawSnow(Bitmap& dst) {
 		CreateSnowParticle();
 	}
 	DrawParticles(dst, *snow_bitmap, snow_bitmap_rect, 7, 30);
+}
+
+void Weather::DrawCool(Bitmap& dst) {
+	
 }
 
 void Weather::DrawParticles(Bitmap& dst, const Bitmap& particle, const Rect rect, int abase, int tmax) {
