@@ -133,6 +133,8 @@ int Weather::GetMaxNumParticles(int weather_type) {
 			return num_fog_particles;
 		case Game_Screen::Weather_Sandstorm:
 			return num_sand_particles[num_strength - 1];
+		case Game_Screen::Weather_Cool:
+			return 128;
 	}
 	return 0;
 }
@@ -199,7 +201,10 @@ void Weather::DrawSnow(Bitmap& dst) {
 }
 
 void Weather::DrawCool(Bitmap& dst) {
-	
+	if (!snow_bitmap) {
+		CreateSnowParticle();
+	}
+	DrawParticles(dst, *snow_bitmap, snow_bitmap_rect, 7, 30);
 }
 
 void Weather::DrawParticles(Bitmap& dst, const Bitmap& particle, const Rect rect, int abase, int tmax) {

@@ -47,6 +47,7 @@ private:
 	void DrawSnow(Bitmap& dst);
 	void DrawFog(Bitmap& dst);
 	void DrawSandstorm(Bitmap& dst);
+	void DrawCool(Bitmap& dst);
 	void CreateRainParticle();
 	void CreateSnowParticle();
 	void CreateSandParticle();

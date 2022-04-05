@@ -250,6 +250,20 @@ void Game_Screen::UpdateSnow() {
 	}
 }
 
+void Game_Screen::UpdateCool() {
+	for (auto& p : particles) {
+		if (p.t > 0) {
+			--p.t;
+			p.x -= Rand::GetRandomNumber(0, 1);
+			p.y += Rand::GetRandomNumber(2, 3);
+		}
+		else if (Rand::PercentChance(5)) {
+			p.t = 30;
+			p.x = Rand::GetRandomNumber(0, GetPanLimitX() / 16 - 1);
+			p.y = Rand::GetRandomNumber(0, GetPanLimitY() / 16 - 1);
+		}
+	}
+}
 void Game_Screen::UpdateFog() {
 	++particles[0].x;
 	++particles[1].x;
@@ -345,6 +359,9 @@ void Game_Screen::UpdateWeather() {
 			break;
 		case Weather_Sandstorm:
 			UpdateSandstorm();
+			break;
+		case Weather_Cool:
+			UpdateCool();
 			break;
 	}
 }
