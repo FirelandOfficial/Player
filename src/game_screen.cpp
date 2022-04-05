@@ -252,10 +252,11 @@ void Game_Screen::UpdateSnow() {
 
 void Game_Screen::UpdateCool() {
 	for (auto& p : particles) {
+		//p.t = 40;
 		if (p.t > 0) {
 			--p.t;
-			p.x -= Rand::GetRandomNumber(0, 1);
-			p.y += Rand::GetRandomNumber(2, 3);
+			//p.x -= Rand::GetRandomNumber(0, 1);
+			p.y -= 1;
 		}
 		else if (Rand::PercentChance(5)) {
 			p.t = 30;
