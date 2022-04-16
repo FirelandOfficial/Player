@@ -234,16 +234,17 @@ void Game_Event::RefreshPage() {
 }
 
 bool Game_Event::AreConditionsMet(const lcf::rpg::EventPage& page) {
+
 	// First switch (A)
-	if (page.condition.flags.switch_a && !Main_Data::game_switches->Get(page.condition.switch_a_id)) {
+	if (page.condition.flags.switch_a && !Main_Data::game_switches->Get(page.condition.switch_a_id, GetMapId(), GetId())) {
 		return false;
 	}
 
 	// Second switch (B)
-	if (page.condition.flags.switch_b && !Main_Data::game_switches->Get(page.condition.switch_b_id)) {
+	if (page.condition.flags.switch_b && !Main_Data::game_switches->Get(page.condition.switch_b_id, GetMapId(), GetId())) {
 		return false;
 	}
-
+	Output::Info("trolling");
 	// Variable
 	if (Player::IsRPG2k()) {
 		if (page.condition.flags.variable && !(Main_Data::game_variables->Get(page.condition.variable_id) >= page.condition.variable_value)) {
