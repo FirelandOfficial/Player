@@ -42,6 +42,9 @@
 #include <cmath>
 #include "scene_gameover.h"
 
+#include "main_data.h"
+#include "game_variables.h"
+
 Game_Player::Game_Player(): Game_PlayerBase(Player)
 {
 	SetDirection(lcf::rpg::EventPage::Direction_down);
@@ -358,6 +361,9 @@ void Game_Player::UpdateMovement(int amount) {
 
 void Game_Player::Update() {
 	Game_Character::Update();
+	//we use these
+	Main_Data::game_variables->Set(1, GetSpriteX()/16); //no idea why these have to be divided by 16
+	Main_Data::game_variables->Set(2, GetSpriteY()/16);
 
 	if (IsStopping()) {
 		if (data()->boarding) {
