@@ -107,7 +107,8 @@ public:
 		Weather_Rain,
 		Weather_Snow,
 		Weather_Fog,
-		Weather_Sandstorm
+		Weather_Sandstorm,
+		Weather_Cool,
 	};
 
 	/**
@@ -194,6 +195,7 @@ protected:
 	void UpdateSnow();
 	void UpdateFog();
 	void UpdateSandstorm();
+	void UpdateCool();
 	void UpdateScreenEffects();
 	void UpdateMovie();
 	void UpdateWeather();

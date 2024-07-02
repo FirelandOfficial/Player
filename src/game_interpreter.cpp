@@ -69,6 +69,8 @@
 #include "algo.h"
 #include "rand.h"
 
+#include "game_screen.h";
+
 enum BranchSubcommand {
 	eOptionBranchElse = 1
 };
@@ -1065,16 +1067,15 @@ bool Game_Interpreter::CommandControlSwitches(lcf::rpg::EventCommand const& com)
 	if (com.parameters[0] >= 0 && com.parameters[0] <= 2) {
 		// Param0: 0: Single, 1: Range, 2: Indirect
 		// For Range set end to param 2, otherwise to start, this way the loop runs exactly once
-
 		int start = com.parameters[0] == 2 ? Main_Data::game_variables->Get(com.parameters[1]) : com.parameters[1];
 		int end = com.parameters[0] == 1 ? com.parameters[2] : start;
 		int val = com.parameters[3];
 
 		if (start == end) {
 			if (val < 2) {
-				Main_Data::game_switches->Set(start, val == 0);
+				Main_Data::game_switches->Set(start, val == 0,Game_Map::GetMapId(), GetThisEventId());
 			} else {
-				Main_Data::game_switches->Flip(start);
+				Main_Data::game_switches->Flip(start, Game_Map::GetMapId(), GetThisEventId());
 			}
 			Game_Map::SetNeedRefreshForSwitchChange(start);
 		} else {
@@ -2152,6 +2153,10 @@ bool Game_Interpreter::CommandComment(const lcf::rpg::EventCommand &com) {
 		}
 
 		return DynRpg::Invoke(command);
+	}
+	if (com.string == "WEED") {
+		Game_Screen* screen = Main_Data::game_screen.get();
+		screen->SetWeatherEffect(Game_Screen::WeatherType::Weather_Cool, 2);
 	}
 	return true;
 }
@@ -3497,7 +3502,7 @@ bool Game_Interpreter::CommandConditionalBranch(lcf::rpg::EventCommand const& co
 	switch (com.parameters[0]) {
 	case 0:
 		// Switch
-		result = Main_Data::game_switches->Get(com.parameters[1]) == (com.parameters[2] == 0);
+		result = Main_Data::game_switches->Get(com.parameters[1], Game_Map::GetMapId(), GetThisEventId()) == (com.parameters[2] == 0);
 		break;
 	case 1:
 		// Variable

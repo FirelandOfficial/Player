@@ -47,9 +47,11 @@ private:
 	void DrawSnow(Bitmap& dst);
 	void DrawFog(Bitmap& dst);
 	void DrawSandstorm(Bitmap& dst);
+	void DrawCool(Bitmap& dst);
 	void CreateRainParticle();
 	void CreateSnowParticle();
 	void CreateSandParticle();
+	void CreateCoolParticle();
 	void CreateFogOverlay();
 
 	void DrawParticles(Bitmap& dst, const Bitmap& particle, Rect rect, int abase, int tmax);
@@ -61,6 +63,8 @@ private:
 	BitmapRef rain_bitmap;
 	BitmapRef fog_bitmap;
 	BitmapRef sand_bitmap;
+	BitmapRef cool_bitmap;
+
 	BitmapRef sand_particle_bitmap;
 
 	BitmapRef tone_bitmap;

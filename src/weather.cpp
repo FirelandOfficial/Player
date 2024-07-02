@@ -59,6 +59,9 @@ void Weather::Draw(Bitmap& dst) {
 		case Game_Screen::Weather_Sandstorm:
 			DrawSandstorm(dst);
 			break;
+		case Game_Screen::Weather_Cool:
+			DrawCool(dst);
+			break;
 	}
 }
 
@@ -130,6 +133,8 @@ int Weather::GetMaxNumParticles(int weather_type) {
 			return num_fog_particles;
 		case Game_Screen::Weather_Sandstorm:
 			return num_sand_particles[num_strength - 1];
+		case Game_Screen::Weather_Cool:
+			return 128;
 	}
 	return 0;
 }
@@ -186,6 +191,27 @@ void Weather::CreateSnowParticle() {
 	for (int i = 0; i < w * h; ++i) {
 		img[i] = pixel;
 	}
+}
+
+void Weather::CreateCoolParticle() {
+	constexpr auto w = snow_bitmap_rect.width;
+	constexpr auto h = snow_bitmap_rect.height;
+	cool_bitmap = Bitmap::Create(w, h, true);
+
+	const auto pixel = Bitmap::pixel_format.rgba_to_uint32_t(255/2, 150/2, 255/2, 255);
+
+	auto* img = reinterpret_cast<uint32_t*>(cool_bitmap->pixels());
+
+	for (int i = 0; i < w * h; ++i) {
+		img[i] = pixel;
+	}
+}
+
+void Weather::DrawCool(Bitmap& dst) {
+	if (!cool_bitmap) {
+		CreateCoolParticle();
+	}
+	DrawParticles(dst, *cool_bitmap, snow_bitmap_rect, 20, 400);
 }
 
 void Weather::DrawSnow(Bitmap& dst) {

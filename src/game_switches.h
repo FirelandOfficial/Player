@@ -24,6 +24,7 @@
 #include <lcf/data.h>
 #include "compiler.h"
 #include "string_view.h"
+#include "output.h"
 
 /**
  * Game_Switches class
@@ -31,6 +32,7 @@
 class Game_Switches {
 public:
 	using Switches_t = std::vector<bool>;
+	using LocalSwitches_t = std::vector<std::vector<std::vector<bool> > >;
 	static constexpr int kMaxWarnings = 10;
 
 	Game_Switches() = default;
@@ -38,15 +40,20 @@ public:
 	void SetData(Switches_t s);
 	const Switches_t& GetData() const;
 
+	bool Get(int switch_id, int mapID,int eventID) const;
 	void SetLowerLimit(size_t limit);
 
 	bool Get(int switch_id) const;
 	int GetInt(int switch_id) const;
 
+	bool Set(int switch_id, bool value, int mapID, int eventID);
 	bool Set(int switch_id, bool value);
+	
+	
 	void SetRange(int first_id, int last_id, bool value);
 
 	bool Flip(int switch_id);
+	bool Flip(int switch_id , int mapID , int eventID );
 	void FlipRange(int first_id, int last_id);
 
 	StringView GetName(int switch_id) const;
@@ -63,6 +70,7 @@ private:
 	void WarnGet(int variable_id) const;
 
 	Switches_t _switches;
+	LocalSwitches_t _selfSwitches;
 	size_t lower_limit = 0;
 	mutable int _warnings = kMaxWarnings;
 };
@@ -94,6 +102,31 @@ inline bool Game_Switches::IsValid(int variable_id) const {
 
 inline bool Game_Switches::ShouldWarn(int first_id, int last_id) const {
 	return (first_id <= 0 || last_id > GetSizeWithLimit()) && (_warnings > 0);
+}
+
+inline bool Game_Switches::Get(int switch_id, int mapID, int eventID) const {
+	if (switch_id >= 81 && switch_id <= 100) {
+		if (mapID + 1 > static_cast<int>(_selfSwitches.size())) {
+			Output::Info("BAILING AT MAPID");
+			return false;
+		}
+		if (eventID + 1 > static_cast<int>(_selfSwitches[mapID].size())) {
+			Output::Info("BAILING AT EVENTID");
+			return false;
+		}
+		if (switch_id > static_cast<int>(_selfSwitches[mapID][eventID].size())) {
+			Output::Info("BAILING AT SWITCHID");
+			return false;
+		}
+		return _selfSwitches[mapID][eventID][switch_id - 1];
+	}
+	if (EP_UNLIKELY(ShouldWarn(switch_id, switch_id))) {
+		WarnGet(switch_id);
+	}
+	if (switch_id <= 0 || switch_id > static_cast<int>(_switches.size())) {
+		return false;
+	}
+	return _switches[switch_id - 1];
 }
 
 inline bool Game_Switches::Get(int switch_id) const {

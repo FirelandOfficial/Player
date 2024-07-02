@@ -28,6 +28,35 @@ void Game_Switches::WarnGet(int variable_id) const {
 	--_warnings;
 }
 
+bool Game_Switches::Set(int switch_id, bool value, int mapID = -1, int eventID = -1) {
+	if (switch_id >= 81 && switch_id <= 100) {
+		if (mapID >= static_cast<int>(_selfSwitches.size()))
+			_selfSwitches.resize(mapID+1);
+		if (eventID >= static_cast<int>(_selfSwitches[mapID].size())) {
+			_selfSwitches[mapID].resize(eventID + 1);
+			Output::Info(std::to_string(_selfSwitches[mapID].size()));
+		}
+		if (switch_id >= static_cast<int>(_selfSwitches[mapID][eventID].size()))
+			_selfSwitches[mapID][eventID].resize(switch_id+1);
+		_selfSwitches[mapID][eventID][switch_id - 1] = value;
+		return value;
+	}
+
+	if (EP_UNLIKELY(ShouldWarn(switch_id, switch_id))) {
+		Output::Debug("Invalid write sw[{}] = {}!", switch_id, value);
+		--_warnings;
+	}
+	if (switch_id <= 0) {
+		return false;
+	}
+	auto& ss = _switches;
+	if (switch_id > static_cast<int>(ss.size())) {
+		ss.resize(switch_id);
+	}
+	ss[switch_id - 1] = value;
+	return value;
+}
+
 bool Game_Switches::Set(int switch_id, bool value) {
 	if (EP_UNLIKELY(ShouldWarn(switch_id, switch_id))) {
 		Output::Debug("Invalid write sw[{}] = {}!", switch_id, value);
@@ -56,6 +85,22 @@ void Game_Switches::SetRange(int first_id, int last_id, bool value) {
 	for (int i = std::max(0, first_id - 1); i < last_id; ++i) {
 		ss[i] = value;
 	}
+}
+
+bool Game_Switches::Flip(int switch_id, int mapID, int eventID) {
+	if (EP_UNLIKELY(ShouldWarn(switch_id, switch_id))) {
+		Output::Debug("Invalid flip sw[{}]!", switch_id);
+		--_warnings;
+	}
+	if (switch_id <= 0) {
+		return false;
+	}
+	auto& ss = _switches;
+	if (switch_id > static_cast<int>(ss.size())) {
+		ss.resize(switch_id);
+	}
+	ss[switch_id - 1].flip();
+	return ss[switch_id - 1];
 }
 
 bool Game_Switches::Flip(int switch_id) {
